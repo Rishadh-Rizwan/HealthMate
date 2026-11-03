@@ -1,4 +1,4 @@
-package com.example.healthmate.feature_package.presentation
+package com.example.healthmate.health.presentation
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
