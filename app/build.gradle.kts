@@ -37,6 +37,8 @@ android {
 }
 
 dependencies {
+    implementation("androidx.navigation:navigation-compose:2.7.7") // navigation version
+    implementation("androidx.compose.material:material-icons-extended") //Material Icons
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.compose.material3)
