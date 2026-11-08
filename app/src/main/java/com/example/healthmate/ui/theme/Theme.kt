@@ -16,7 +16,6 @@ import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
 private val DarkColorScheme = darkColorScheme(
-
     primary = PrimaryContainer,
     onPrimary = TextPrimary,
     primaryContainer = Primary,
@@ -25,25 +24,28 @@ private val DarkColorScheme = darkColorScheme(
     onBackground = Color(0xFFE1E3E2),
     surface = Color(0xFF1E1E1E),
     onSurface = Color(0xFFE1E3E2),
-    surfaceVariant = Color(0xFFE1E3E2),
+    surfaceVariant = Color(0xFF2C2C2C),
     onSurfaceVariant = TextMuted,
     error = Error,
     onError = Color.White
+
 )
 
 private val LightColorScheme = lightColorScheme(
-
     primary = Primary,
     onPrimary = Color.White,
     primaryContainer = PrimaryContainer,
     onPrimaryContainer = TextPrimary,
     background = Background,
+    onBackground = TextPrimary,
     surface = Surface,
     onSurface = TextPrimary,
     surfaceVariant = Background,
     onSurfaceVariant = TextMuted,
     error = Error,
     onError = Color.White
+
+
 )
 
 @Composable
@@ -67,7 +69,7 @@ fun HealthMateTheme(
     if (!view.isInEditMode){
         SideEffect {
             val window = (view.context as Activity).window
-            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars =!darkTheme
+            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = !darkTheme
         }
     }
 
