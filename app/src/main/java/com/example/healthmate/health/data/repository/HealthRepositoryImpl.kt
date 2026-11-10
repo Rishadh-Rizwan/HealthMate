@@ -46,4 +46,9 @@ class HealthRepositoryImpl (private val dao: HealthDao): HealthRepository {
             dao.upsertHealthRecord(newEntity)
         }
     }
+    override fun getAllRecords(): Flow<List<HealthRecord>> {
+        return dao.getAllRecords().map { entities ->
+            entities.map { it.toHealthRecord() }
+        }
+    }
 }

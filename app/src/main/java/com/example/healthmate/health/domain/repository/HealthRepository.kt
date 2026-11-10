@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.Flow
 interface HealthRepository {
 
     fun getRecordByDate(date: String): Flow<HealthRecord?>
+    fun getAllRecords(): Flow<List<HealthRecord>>
     suspend fun insertOrUpdateRecord(record: HealthRecord)
     suspend fun updateWaterIntake(date: String, amount: Int)
     suspend fun updateStepCount(date: String, steps: Int)
