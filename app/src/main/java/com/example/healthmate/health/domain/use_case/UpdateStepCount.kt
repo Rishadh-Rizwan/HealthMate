@@ -7,8 +7,6 @@ class UpdateStepCount (
 
     suspend operator fun invoke(date: String,steps: Int){
 
-        val calories = (steps * 0.04).toInt()
-
         repository.updateStepCount(date, steps)
     }
 }

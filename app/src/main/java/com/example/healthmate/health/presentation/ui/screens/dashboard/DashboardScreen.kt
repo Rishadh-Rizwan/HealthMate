@@ -7,21 +7,27 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.material.icons.automirrored.filled.List
-
+import com.example.healthmate.health.presentation.HealthViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DashboardScreen(
+    viewModel: HealthViewModel, // <-- Added viewModel parameter
     onNavigateToAddRecord: () -> Unit,
     onNavigateToHistory: () -> Unit,
     onNavigateToSearch: () -> Unit
 ) {
+    // Collect today's live record from the ViewModel state flow
+    val todayRecord by viewModel.todayRecord.collectAsState()
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -73,28 +79,28 @@ fun DashboardScreen(
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            // 1. Hero Step Counter Card
+            // 1. Hero Step Counter Card (Using live database values with fallback defaults)
             StepCounterCard(
-                currentSteps = 6420,
+                currentSteps = todayRecord?.steps ?: 0,
                 targetSteps = 10000,
                 isAutoTracking = true
             )
 
-            // 2. Secondary Metrics Row (Calories & Water)
+            // 2. Secondary Metrics Row (Calories & Water using live values)
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 MetricCard(
                     title = "Calories",
-                    value = "450 kcal",
+                    value = "${todayRecord?.calories ?: 0} kcal",
                     subtitle = "Target: 600 kcal",
                     modifier = Modifier.weight(1f),
                     containerColor = MaterialTheme.colorScheme.secondaryContainer
                 )
                 MetricCard(
                     title = "Water Intake",
-                    value = "1,750 ml",
+                    value = "${todayRecord?.water ?: 0} ml",
                     subtitle = "Target: 2,500 ml",
                     modifier = Modifier.weight(1f),
                     containerColor = MaterialTheme.colorScheme.tertiaryContainer

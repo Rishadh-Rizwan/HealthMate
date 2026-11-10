@@ -1,6 +1,10 @@
 package com.example.healthmate.health.presentation.ui.screens.records
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -8,10 +12,12 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.healthmate.health.presentation.HealthViewModel
 
 data class HealthRecordUiModel(
     val id: String,
@@ -23,15 +29,11 @@ data class HealthRecordUiModel(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RecordListScreen (
+fun RecordListScreen(
+    viewModel: HealthViewModel,
     onNavigateBack: () -> Unit
 ) {
-    val sampleRecord = listOf(
-        HealthRecordUiModel("1", "Today, Nov 10", 6420, 450, 750),
-        HealthRecordUiModel("2", "Yesterday, Nov 9", 5992, 430, 1550),
-        HealthRecordUiModel("3", "Friday, Nov 8", 7624, 550, 1250),
-        HealthRecordUiModel("4", "Thursday, Nov 7", 6530, 480, 820),
-    )
+    val records by viewModel.allRecords.collectAsStateWithLifecycle()
 
     Scaffold(
         topBar = {
@@ -47,8 +49,7 @@ fun RecordListScreen (
                 }
             )
         }
-    ) {
-        innerPadding ->
+    ) { innerPadding ->
         LazyColumn(
             modifier = Modifier
                 .fillMaxWidth()
@@ -56,15 +57,23 @@ fun RecordListScreen (
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            items(sampleRecord) { record ->
-                HealthRecordItemCard(record = record)
+            items(records) { record ->
+                HealthRecordItemCard(
+                    record = HealthRecordUiModel(
+                        id = record.id.toString(),
+                        date = record.date,
+                        steps = record.steps,
+                        calories = record.calories,
+                        waterMl = record.water
+                    )
+                )
             }
         }
     }
 }
 
 @Composable
-fun HealthRecordItemCard (record: HealthRecordUiModel) {
+fun HealthRecordItemCard(record: HealthRecordUiModel) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
