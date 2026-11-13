@@ -1,8 +1,10 @@
 package com.example.healthmate.health.domain.use_case
 
-class CalculateCaloriesBurned {
-    operator fun invoke(steps: Int): Int {
+import com.example.healthmate.health.domain.model.CalorieEstimate
 
-        return (steps * 0.04).toInt()
+class CalculateCaloriesBurned {
+
+    operator fun invoke(steps: Int): Int {
+        return CalorieEstimate.fromSteps(steps)
     }
 }

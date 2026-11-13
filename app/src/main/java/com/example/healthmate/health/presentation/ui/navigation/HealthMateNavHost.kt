@@ -1,5 +1,8 @@
 package com.example.healthmate.health.presentation.ui.navigation
 
+import android.net.Uri
+import androidx.navigation.NavType
+import androidx.navigation.navArgument
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -22,37 +25,67 @@ fun HealthMateNavHost(
         startDestination = Screen.Dashboard.route,
         modifier = modifier
     ) {
-        // 1. Dashboard Screen (Triggers navigation to Add, History, and Search)
         composable(Screen.Dashboard.route) {
             DashboardScreen(
                 viewModel = viewModel,
-                onNavigateToAddRecord = { navController.navigate(Screen.AddEditRecord.route) },
-                onNavigateToHistory = { navController.navigate(Screen.RecordList.route) },
-                onNavigateToSearch = { navController.navigate(Screen.SearchByDate.route) }
+                onNavigateToAddRecord = {
+                    navController.navigate(Screen.AddEditRecord.route)
+                },
+                onNavigateToHistory = {
+                    navController.navigate(Screen.RecordList.route)
+                },
+                onNavigateToSearch = {
+                    navController.navigate(Screen.SearchByDate.route)
+                }
             )
         }
 
-        // 2. Record List (History) Screen
         composable(Screen.RecordList.route) {
             RecordListScreen(
                 viewModel = viewModel,
-                onNavigateBack = { navController.popBackStack() }
+                onNavigateBack = {
+                    navController.popBackStack()
+                },
+                onEditRecord = { date ->
+                    navController.navigate(
+                        "${Screen.AddEditRecord.route}?date=${Uri.encode(date)}"
+                    )
+                }
             )
         }
 
-        // 3. Add / Edit Record Screen (Passes ViewModel and back navigation)
-        composable(Screen.AddEditRecord.route) {
+        composable(
+            route = "${Screen.AddEditRecord.route}?date={date}",
+            arguments = listOf(
+                navArgument("date") {
+                    type = NavType.StringType
+                    nullable = true
+                    defaultValue = null
+                }
+            )
+        ) { backStackEntry ->
+            val initialDate = backStackEntry.arguments?.getString("date")
+
             AddEditRecordScreen(
                 viewModel = viewModel,
-                onNavigateBack = { navController.popBackStack() }
+                onNavigateBack = {
+                    navController.popBackStack()
+                },
+                initialDate = initialDate
             )
         }
 
-        // 4. Search By Date Screen
         composable(Screen.SearchByDate.route) {
             SearchByDateScreen(
                 viewModel = viewModel,
-                onNavigateBack = { navController.popBackStack() }
+                onNavigateBack = {
+                    navController.popBackStack()
+                },
+                onEditRecord = { date ->
+                    navController.navigate(
+                        "${Screen.AddEditRecord.route}?date=${Uri.encode(date)}"
+                    )
+                }
             )
         }
     }
